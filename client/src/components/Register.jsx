@@ -24,8 +24,8 @@ const Register = () => {
     });
   };
 
-  const addUserdata = (e) => {
-    e.preventDefault();
+  const addUserdata = async(e) => {
+    e.preventDefault()
 
     const { fname, email, password, cpassword } = inpval;
 
@@ -35,16 +35,37 @@ const Register = () => {
       alert("Enter Valid Email");
     } else if (!email.includes("@")) {
       alert("Enter Valid Email Address");
-    } else if (password < 6) {
-      alert("Password have must 6 char");
     } else if (password === "") {
       alert("Please Enter Password");
-    } else if (password !== cpassword) {
+    }else if (password < 6) {
+      alert("Password have must 6 char");
+    }else if (cpassword === "") {
+      alert("Please Enter Confirm Password");
+    }  else if (password !== cpassword) {
       alert("Password and Confirm Password Not Matched");
     } else {
-      console.log("user registration successfull");
+      // console.log("user registration successfull");
+
+      const data = await fetch("http://localhost:4000/register",{
+        method:"POST",
+        headers:{
+          "Content-Type": "application/json"
+        },
+        body:JSON.stringify({
+          fname, email, password, cpassword 
+        })
+      })
+
+      const res = await data.json();
+      // console.log(res);
+
+      if(res.status === 201){
+        alert("user registration done")
+        SetInpval({...inpval, fname:"",email:"",password:"",cpassword:""})
+      }
     }
   };
+
   return (
     <>
       <section>
